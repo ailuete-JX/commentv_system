@@ -11,23 +11,25 @@
     </div>
 
     <div v-if="isEvaluation" class="evaluation-content">
-      <el-row :gutter="20" style="height: 100%;">
-        <el-col :span="12" style="height: 100%;">
-          <el-card class="chart-card">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="card-header">
                 <span>模型评估指标</span>
               </div>
             </template>
-            <div id="radarChart" ref="radarChartRef"></div>
+            <div class="chart-wrapper">
+              <div id="radarChart" style="width: 100%; height: 400px;"></div>
+            </div>
           </el-card>
         </el-col>
-        <el-col :span="12" style="height: 100%;">
-          <el-card class="chart-card">
+        <el-col :span="12">
+          <el-card shadow="hover" class="chart-card">
             <template #header>
               <div class="card-header">
                 <span>混淆矩阵分析</span>
-                <el-select v-model="selectedModel" placeholder="选择模型" style="width: 180px">
+                <el-select v-model="selectedModel" placeholder="选择模型" size="default">
                   <el-option label="朴素贝叶斯" value="nb" />
                   <el-option label="BiLSTM" value="bilstm" />
                   <el-option label="TextCNN" value="textcnn" />
@@ -36,7 +38,9 @@
                 </el-select>
               </div>
             </template>
-            <div id="confusionMatrix" ref="confusionMatrixRef"></div>
+            <div class="chart-wrapper">
+              <div id="confusionMatrix" style="width: 100%; height: 400px;"></div>
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -49,13 +53,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
 const isEvaluation = ref(true)
 const selectedModel = ref('deepseek')
-const radarChartRef = ref(null)
-const confusionMatrixRef = ref(null)
 let radarChart = null
 let confusionChart = null
 
@@ -87,71 +89,49 @@ const modelData = {
   }
 }
 
-onMounted(async () => {
-  await nextTick()
-  const initInterval = setInterval(() => {
-    if (document.getElementById('radarChart') && document.getElementById('confusionMatrix')) {
-      clearInterval(initInterval)
-      initCharts()
-    }
-  }, 100)
-})
-
-const initCharts = () => {
-  radarChart = echarts.init(document.getElementById('radarChart'))
-  confusionChart = echarts.init(document.getElementById('confusionMatrix'))
-  
-  initRadarChart()
-  updateConfusionMatrix()
-  
-  window.addEventListener('resize', handleResize)
-}
-
-const handleResize = () => {
-  radarChart?.resize()
-  confusionChart?.resize()
-}
-
-watch(selectedModel, () => {
-  nextTick(() => {
-    updateConfusionMatrix()
-  })
-})
-
-watch(isEvaluation, async () => {
-  if (isEvaluation.value) {
-    await nextTick()
-    initCharts()
-  }
-})
-
 const initRadarChart = () => {
+  const radarDom = document.getElementById('radarChart')
+  if (!radarDom) return
+
+  radarChart = echarts.init(radarDom)
   const metrics = ['准确率', '精确率', '召回率', 'F1得分', 'AUC']
   
   const option = {
-    backgroundColor: '#fff',
     title: {
       text: '模型性能对比',
-      textStyle: {
-        fontSize: 16
-      }
+      left: 'center'
     },
     tooltip: {
       trigger: 'item'
     },
     legend: {
       data: Object.values(modelData).map(m => m.name),
-      orient: 'vertical',
-      right: 0,
-      top: 'middle'
+      orient: 'horizontal',
+      top: 25,
+      left: 'center'
     },
     radar: {
-      indicator: metrics.map(name => ({ name, max: 100 })),
-      center: ['40%', '50%'],
+      indicator: metrics.map(name => ({ 
+        name, 
+        min: 85,  // 设置最小值为85，使差异更明显
+        max: 100 
+      })),
+      center: ['50%', '60%'],
       radius: '60%',
       splitLine: {
         lineStyle: {
           color: '#ddd'
+        }
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#ddd'
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ['#fff']
         }
       }
     },
@@ -160,13 +140,9 @@ const initRadarChart = () => {
       data: Object.values(modelData).map(model => ({
         name: model.name,
         value: model.metrics,
-        symbolSize: 6,
-        lineStyle: {
-          width: 2
-        },
-        areaStyle: {
-          opacity: 0.2
-        }
+        symbolSize: 4,
+        lineStyle: { width: 2 },
+        areaStyle: { opacity: 0.2 }
       }))
     }]
   }
@@ -175,88 +151,159 @@ const initRadarChart = () => {
 }
 
 const updateConfusionMatrix = () => {
-  if (!confusionChart) return
+  const matrixDom = document.getElementById('confusionMatrix')
+  if (!matrixDom) return
+
+  if (!confusionChart) {
+    confusionChart = echarts.init(matrixDom)
+  }
   
   const model = modelData[selectedModel.value]
   const matrix = model.confusion
+  const total = matrix[0][0] + matrix[0][1] + matrix[1][0] + matrix[1][1]
   
   const option = {
-    backgroundColor: '#fff',
     title: {
       text: `${model.name}混淆矩阵`,
       left: 'center',
-      textStyle: {
-        fontSize: 16
-      }
+      top: 10
     },
     tooltip: {
-      trigger: 'item',
-      formatter: (params) => {
-        const types = ['真正例(TP)', '假正例(FP)', '假负例(FN)', '真负例(TN)']
-        return `${types[params.dataIndex]}: ${params.value}`
+      position: 'top',
+      formatter: function (params) {
+        const value = params.data.value[2]
+        const percentage = ((value / total) * 100).toFixed(2)
+        return `数量: ${value}<br/>占比: ${percentage}%`
       }
+    },
+    grid: {
+      top: 60,
+      bottom: 80,  // 增加底部空间以容纳颜色条
+      left: 80,    // 缩小左边距
+      right: 60,   // 缩小右边距
+      containLabel: true
     },
     xAxis: {
       type: 'category',
-      data: ['预测结果'],
-      axisLabel: { interval: 0 }
+      data: ['预测正向', '预测负向'],
+      splitArea: {
+        show: true
+      },
+      axisLabel: {
+        interval: 0,
+        fontSize: 12
+      }
     },
     yAxis: {
-      type: 'value',
-      max: Math.max(...matrix.flat()) * 1.1
-    },
-    grid: {
-      top: '15%',
-      left: '10%',
-      right: '10%',
-      bottom: '10%',
-      containLabel: true
-    },
-    series: [
-      {
-        name: '混淆矩阵',
-        type: 'bar',
-        barWidth: '60%',
-        stack: 'total',
-        data: [
-          { value: matrix[0][0], itemStyle: { color: '#67C23A' } },  // TP
-          { value: matrix[0][1], itemStyle: { color: '#F56C6C' } },  // FP
-          { value: matrix[1][0], itemStyle: { color: '#E6A23C' } },  // FN
-          { value: matrix[1][1], itemStyle: { color: '#409EFF' } }   // TN
-        ],
-        label: {
-          show: true,
-          position: 'inside',
-          color: '#fff',
-          fontSize: 12
-        }
+      type: 'category',
+      data: ['实际正向', '实际负向'],
+      splitArea: {
+        show: true
+      },
+      axisLabel: {
+        interval: 0,
+        rotate: 90,
+        fontSize: 12,
+        margin: 4
       }
-    ]
+    },
+    visualMap: {
+      min: 0,
+      max: Math.max(...matrix.flat()),
+      calculable: true,
+      orient: 'horizontal',
+      left: 'center',
+      bottom: 0,
+      inRange: {
+        // 使用经典的混淆矩阵颜色方案
+        color: [
+          '#08306B',  // 深蓝色（真负例）
+          '#f7f7f7',  // 白色（过渡色）
+          '#F5FAFE'   // 灰白色（真正例）
+        ]
+      },
+      textStyle: {
+        fontSize: 12
+      }
+    },
+    series: [{
+      name: '混淆矩阵',
+      type: 'heatmap',
+      data: [
+        {
+          value: [0, 0, matrix[0][0]],
+          itemStyle: { color: '#08306B' },
+          label: { color: '#FFFFFF' }
+        },
+        {
+          value: [0, 1, matrix[0][1]],
+          itemStyle: { color: '#F5FAFE' },
+          label: { color: '#000000' }
+        },
+        {
+          value: [1, 0, matrix[1][0]],
+          itemStyle: { color: '#F5FAFE' },
+          label: { color: '#000000' }
+        },
+        {
+          value: [1, 1, matrix[1][1]],
+          itemStyle: { color: '#08306B' },
+          label: { color: '#FFFFFF' }
+        }
+      ],
+      label: {
+        show: true,
+        formatter: function(params) {
+          const value = params.data.value[2]
+          const percentage = ((value / total) * 100).toFixed(1)
+          return `${value}\n(${percentage}%)`
+        },
+        fontSize: 11,
+        fontWeight: 'bold'
+      }
+    }]
   }
   
   confusionChart.setOption(option)
 }
 
-onBeforeUnmount(() => {
+const handleResize = () => {
+  radarChart?.resize()
+  confusionChart?.resize()
+}
+
+onMounted(() => {
+  // 使用setTimeout确保DOM已完全渲染
+  setTimeout(() => {
+    initRadarChart()
+    updateConfusionMatrix()
+    window.addEventListener('resize', handleResize)
+  }, 300)
+})
+
+onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   radarChart?.dispose()
   confusionChart?.dispose()
 })
+
+watch(selectedModel, updateConfusionMatrix)
 </script>
 
 <style scoped>
 .sentiment-model {
   padding: 20px;
-  height: calc(100vh - 40px);
-  display: flex;
-  flex-direction: column;
   background-color: #f5f7fa;
+  height: calc(100vh - 84px);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .page-header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  height: 32px;
 }
 
 .page-header h2 {
@@ -266,42 +313,48 @@ onBeforeUnmount(() => {
 }
 
 .evaluation-content {
-  flex: 1;
-  min-height: 0;
+  height: calc(100% - 52px);
+  overflow: hidden;
+}
+
+.el-row {
+  margin: 0 !important;
+  height: 100%;
+}
+
+.el-col {
+  height: 100%;
+  padding: 0 10px !important;
 }
 
 .chart-card {
   height: 100%;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
+  margin: 0;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  height: 60px;
-  border-bottom: 1px solid #ebeef5;
+}
+
+.chart-wrapper {
+  padding: 5px;
+  height: calc(100% - 51px);
 }
 
 :deep(.el-card__header) {
-  padding: 0;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ebeef5;
 }
 
 :deep(.el-card__body) {
-  padding: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 0;
+  height: calc(100% - 51px);
 }
 
 #radarChart, #confusionMatrix {
-  flex: 1;
   width: 100%;
-  min-height: 300px;
+  height: 100%;
 }
 </style>

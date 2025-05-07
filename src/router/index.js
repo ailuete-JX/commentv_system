@@ -40,12 +40,6 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/algorithm/sentiment',
-    name: 'SentimentModel',
-    component: () => import('../views/algorithm/SentimentModel.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/algorithm/clustering',
     name: 'TopicsClustering',
     component: () => import('../views/algorithm/TopicsClustering.vue'),
@@ -68,6 +62,37 @@ const routes = [
     name: 'CommentSearch',
     component: () => import('../views/analysis/CommentSearch.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/algorithm',
+    name: 'Algorithm',
+    component: () => import('../views/algorithm/Algorithm.vue'),
+    meta: { requiresAuth: true },
+    redirect: '/algorithm/sentiment-model',  // 添加默认重定向
+    children: [
+      {
+        path: '',  // 空路径会重定向到 sentiment-model
+        redirect: 'sentiment-model'
+      },
+      {
+        path: 'sentiment-model',
+        name: 'SentimentModel',
+        component: () => import('../views/algorithm/SentimentModel.vue'),
+        meta: {
+          requiresAuth: true,
+          title: '情感分析模型评估'
+        }
+      },
+      {
+        path: 'sentiment-analysis',
+        name: 'SentimentAnalysisUsage',
+        component: () => import('../views/algorithm/SentimentAnalysis.vue'),
+        meta: {
+          requiresAuth: true,
+          title: '情感分析使用'
+        }
+      }
+    ]
   }
 ]
 

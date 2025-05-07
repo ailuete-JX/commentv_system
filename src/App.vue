@@ -1,10 +1,35 @@
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import {
+  HomeFilled,
+  Monitor,
+  DataAnalysis,
+  Notification,
+  Fold,
+  Expand
+} from '@element-plus/icons-vue'
+
+const getMenuIndexFromPath = (path) => {
+  const pathMap = {
+    '/': '1',
+    '/analysis/comments': '2-0',
+    '/sentiment': '2-1',
+    '/keywords': '2-2',
+    '/topics': '2-3',
+    '/geographic': '2-4',
+    '/analysis/product': '2-5',
+    '/algorithm/sentiment-model': '3-1',
+    '/algorithm/clustering': '3-2',
+    '/suggestions': '4'
+  }
+  return pathMap[path] || '1'
+}
 
 const router = useRouter()
+const route = useRoute()
 const isCollapse = ref(false)
-const activeIndex = ref('1')
+const activeIndex = computed(() => getMenuIndexFromPath(route.path))
 
 const handleMenuSelect = (index) => {
   switch(index) {
@@ -30,7 +55,7 @@ const handleMenuSelect = (index) => {
       router.push('/analysis/product')
       break
     case '3-1':
-      router.push('/algorithm/sentiment')
+      router.push('/algorithm/sentiment-model')  // 修改这里的路由
       break
     case '3-2':
       router.push('/algorithm/clustering')

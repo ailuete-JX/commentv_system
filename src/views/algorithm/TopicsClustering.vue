@@ -108,8 +108,9 @@ const handleIframeLoad = (event) => {
     
     // 小屏幕下设置自适应缩放
     const screenWidth = window.innerWidth
-    const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0. : 1
-    
+    //const scale = screenWidth < 2000 ? 0.6 : 1
+    //const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0. : 1
+    const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0.8 : 1
     // 设置页面缩放和布局
     style.textContent = `
       html, body {
@@ -120,11 +121,10 @@ const handleIframeLoad = (event) => {
         overflow: hidden !important;
       }
       body {
-        transform: scale(${scale});
-        transform-origin: center top;
         position: absolute;
         left: 50%;
         transform: translateX(-50%) scale(${scale});
+        transform-origin: top center;
         width: ${Math.ceil(100/scale)}% !important;
         height: ${Math.ceil(100/scale)}vh !important;
         display: flex !important;
