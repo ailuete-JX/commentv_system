@@ -23,7 +23,7 @@ import * as echarts from 'echarts'
 const chartRef = ref(null)
 const selectedBrand = ref('all')
 let myChart = null
-
+// 词云图
 // 真实数据
 const mockData = {
   all: [

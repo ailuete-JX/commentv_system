@@ -115,7 +115,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { ElMessage } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-
+//评论数据查询图
 // 日期快捷选项
 const dateShortcuts = [
   {
