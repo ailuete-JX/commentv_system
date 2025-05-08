@@ -1,54 +1,38 @@
 <template>
   <div class="sentiment-model">
-    <div class="page-header">
-      <el-switch
-        v-model="isEvaluation"
-        active-text="模型评估"
-        inactive-text="情感分析"
-        style="margin-right: 20px;"
-      />
-      <h2>{{ isEvaluation ? '情感分析模型评估' : '情感分析使用' }}</h2>
-    </div>
-
-    <div v-if="isEvaluation" class="evaluation-content">
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-card shadow="hover" class="chart-card">
-            <template #header>
-              <div class="card-header">
-                <span>模型评估指标</span>
-              </div>
-            </template>
-            <div class="chart-wrapper">
-              <div id="radarChart" style="width: 100%; height: 400px;"></div>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-card shadow="hover" class="chart-card">
+          <template #header>
+            <div class="card-header">
+              <span>模型评估指标</span>
             </div>
-          </el-card>
-        </el-col>
-        <el-col :span="12">
-          <el-card shadow="hover" class="chart-card">
-            <template #header>
-              <div class="card-header">
-                <span>混淆矩阵分析</span>
-                <el-select v-model="selectedModel" placeholder="选择模型" size="default">
-                  <el-option label="朴素贝叶斯" value="nb" />
-                  <el-option label="BiLSTM" value="bilstm" />
-                  <el-option label="TextCNN" value="textcnn" />
-                  <el-option label="百度情感分析" value="baidu" />
-                  <el-option label="DeepSeek情感分析" value="deepseek" />
-                </el-select>
-              </div>
-            </template>
-            <div class="chart-wrapper">
-              <div id="confusionMatrix" style="width: 100%; height: 400px;"></div>
+          </template>
+          <div class="chart-wrapper">
+            <div id="radarChart" style="width: 100%; height: 100%;"></div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card shadow="hover" class="chart-card">
+          <template #header>
+            <div class="card-header">
+              <span>混淆矩阵分析</span>
+              <el-select v-model="selectedModel" placeholder="选择模型" size="default">
+                <el-option label="朴素贝叶斯" value="nb" />
+                <el-option label="BiLSTM" value="bilstm" />
+                <el-option label="TextCNN" value="textcnn" />
+                <el-option label="百度情感分析" value="baidu" />
+                <el-option label="DeepSeek情感分析" value="deepseek" />
+              </el-select>
             </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </div>
-    
-    <div v-else class="usage-content">
-      <!-- 情感分析使用页面的内容将在后续添加 -->
-    </div>
+          </template>
+          <div class="chart-wrapper">
+            <div id="confusionMatrix" style="width: 100%; height: 100%;"></div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -56,7 +40,6 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
-const isEvaluation = ref(true)
 const selectedModel = ref('deepseek')
 let radarChart = null
 let confusionChart = null
@@ -90,10 +73,9 @@ const modelData = {
 }
 
 const initRadarChart = () => {
-  const radarDom = document.getElementById('radarChart')
-  if (!radarDom) return
-
-  radarChart = echarts.init(radarDom)
+  if (!document.getElementById('radarChart')) return
+  
+  radarChart = echarts.init(document.getElementById('radarChart'))
   const metrics = ['准确率', '精确率', '召回率', 'F1得分', 'AUC']
   
   const option = {
@@ -113,11 +95,11 @@ const initRadarChart = () => {
     radar: {
       indicator: metrics.map(name => ({ 
         name, 
-        min: 85,  // 设置最小值为85，使差异更明显
+        min: 85,
         max: 100 
       })),
-      center: ['50%', '60%'],
-      radius: '60%',
+      center: ['50%', '55%'],
+      radius: '70%',
       splitLine: {
         lineStyle: {
           color: '#ddd'
@@ -151,11 +133,10 @@ const initRadarChart = () => {
 }
 
 const updateConfusionMatrix = () => {
-  const matrixDom = document.getElementById('confusionMatrix')
-  if (!matrixDom) return
+  if (!document.getElementById('confusionMatrix')) return
 
   if (!confusionChart) {
-    confusionChart = echarts.init(matrixDom)
+    confusionChart = echarts.init(document.getElementById('confusionMatrix'))
   }
   
   const model = modelData[selectedModel.value]
@@ -177,10 +158,10 @@ const updateConfusionMatrix = () => {
       }
     },
     grid: {
-      top: 60,
-      bottom: 80,  // 增加底部空间以容纳颜色条
-      left: 80,    // 缩小左边距
-      right: 60,   // 缩小右边距
+      top: '15%',
+      bottom: '15%',
+      left: '15%',
+      right: '15%',
       containLabel: true
     },
     xAxis: {
@@ -215,11 +196,10 @@ const updateConfusionMatrix = () => {
       left: 'center',
       bottom: 0,
       inRange: {
-        // 使用经典的混淆矩阵颜色方案
         color: [
-          '#08306B',  // 深蓝色（真负例）
-          '#f7f7f7',  // 白色（过渡色）
-          '#F5FAFE'   // 灰白色（真正例）
+          '#08306B',
+          '#f7f7f7',
+          '#F5FAFE'
         ]
       },
       textStyle: {
@@ -273,12 +253,12 @@ const handleResize = () => {
 }
 
 onMounted(() => {
-  // 使用setTimeout确保DOM已完全渲染
+  window.addEventListener('resize', handleResize)
+  // 使用nextTick确保DOM已经渲染完成
   setTimeout(() => {
     initRadarChart()
     updateConfusionMatrix()
-    window.addEventListener('resize', handleResize)
-  }, 300)
+  }, 0)
 })
 
 onUnmounted(() => {
@@ -293,43 +273,23 @@ watch(selectedModel, updateConfusionMatrix)
 <style scoped>
 .sentiment-model {
   padding: 20px;
-  background-color: #f5f7fa;
-  height: calc(100vh - 84px);
-  overflow: hidden;
+  background-color: #fff;
+  height: calc(100vh - 100px);
   box-sizing: border-box;
 }
 
-.page-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  height: 32px;
-}
-
-.page-header h2 {
-  margin: 0;
-  font-size: 20px;
-  color: #303133;
-}
-
-.evaluation-content {
-  height: calc(100% - 52px);
-  overflow: hidden;
-}
-
 .el-row {
-  margin: 0 !important;
   height: 100%;
 }
 
 .el-col {
   height: 100%;
-  padding: 0 10px !important;
 }
 
 .chart-card {
   height: 100%;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -339,8 +299,20 @@ watch(selectedModel, updateConfusionMatrix)
 }
 
 .chart-wrapper {
-  padding: 5px;
-  height: calc(100% - 51px);
+  flex: 1;
+  min-height: 500px;
+  height: calc(100% - 60px);
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#radarChart, #confusionMatrix {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 450px;
 }
 
 :deep(.el-card__header) {
@@ -349,12 +321,8 @@ watch(selectedModel, updateConfusionMatrix)
 }
 
 :deep(.el-card__body) {
+  flex: 1;
   padding: 0;
-  height: calc(100% - 51px);
-}
-
-#radarChart, #confusionMatrix {
-  width: 100%;
-  height: 100%;
+  overflow: hidden;
 }
 </style>
