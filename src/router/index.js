@@ -16,14 +16,14 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/sentiment',
-    name: 'SentimentAnalysis',
+    path: '/keywords',
+    name: 'KeywordsAnalysis',
     component: () => import('../views/analysis/SentimentAnalysis.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/keywords',
-    name: 'KeywordsAnalysis',
+    path: '/sentiment',
+    name: 'SentimentAnalysis',
     component: () => import('../views/analysis/KeywordsAnalysis.vue'),
     meta: { requiresAuth: true }
   },
@@ -34,27 +34,15 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/geographic',
-    name: 'GeographicAnalysis',
-    component: () => import('../views/analysis/GeographicAnalysis.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/algorithm/clustering',
-    name: 'TopicsClustering',
-    component: () => import('../views/algorithm/TopicsClustering.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/suggestions',
-    name: 'Suggestions',
-    component: () => import('../views/Suggestions.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/analysis/product',
     name: 'ProductAnalysis',
     component: ProductAnalysis,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/geographic',
+    name: 'GeographicAnalysis',
+    component: () => import('../views/analysis/GeographicAnalysis.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -68,12 +56,7 @@ const routes = [
     name: 'Algorithm',
     component: () => import('../views/algorithm/Algorithm.vue'),
     meta: { requiresAuth: true },
-    redirect: '/algorithm/sentiment-model',  // 添加默认重定向
     children: [
-      {
-        path: '',  // 空路径会重定向到 sentiment-model
-        redirect: 'sentiment-model'
-      },
       {
         path: 'sentiment-model',
         name: 'SentimentModel',
@@ -82,17 +65,20 @@ const routes = [
           requiresAuth: true,
           title: '情感分析模型评估'
         }
-      },
-      {
-        path: 'sentiment-analysis',
-        name: 'SentimentAnalysisUsage',
-        component: () => import('../views/algorithm/SentimentAnalysis.vue'),
-        meta: {
-          requiresAuth: true,
-          title: '情感分析使用'
-        }
       }
     ]
+  },
+  {
+    path: '/algorithm/clustering',
+    name: 'TopicsClustering',
+    component: () => import('../views/algorithm/TopicsClustering.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/suggestions',
+    name: 'Suggestions',
+    component: () => import('../views/Suggestions.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 

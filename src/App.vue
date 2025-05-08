@@ -13,12 +13,12 @@ import {
 const getMenuIndexFromPath = (path) => {
   const pathMap = {
     '/': '1',
-    '/analysis/comments': '2-0',
-    '/sentiment': '2-1',
-    '/keywords': '2-2',
-    '/topics': '2-3',
+    '/keywords': '2-1',
+    '/topics': '2-2',
+    '/analysis/product': '2-3',
     '/geographic': '2-4',
-    '/analysis/product': '2-5',
+    '/sentiment': '2-5',
+    '/analysis/comments': '2-6',
     '/algorithm/sentiment-model': '3-1',
     '/algorithm/clustering': '3-2',
     '/suggestions': '4'
@@ -36,26 +36,26 @@ const handleMenuSelect = (index) => {
     case '1':
       router.push('/')
       break
-    case '2-0':
-      router.push('/analysis/comments')
-      break
     case '2-1':
-      router.push('/sentiment')
-      break
-    case '2-2':
       router.push('/keywords')
       break
-    case '2-3':
+    case '2-2':
       router.push('/topics')
+      break
+    case '2-3':
+      router.push('/analysis/product')
       break
     case '2-4':
       router.push('/geographic')
       break
     case '2-5':
-      router.push('/analysis/product')
+      router.push('/sentiment')
+      break
+    case '2-6':
+      router.push('/analysis/comments')
       break
     case '3-1':
-      router.push('/algorithm/sentiment-model')  // 修改这里的路由
+      router.push('/algorithm/sentiment-model')
       break
     case '3-2':
       router.push('/algorithm/clustering')
@@ -95,12 +95,12 @@ const handleLogout = () => {
               <el-icon><DataAnalysis /></el-icon>
               <span>描述性分析</span>
             </template>
-            <el-menu-item index="2-0">评论查询</el-menu-item>
             <el-menu-item index="2-1">高频词分析</el-menu-item>
-            <el-menu-item index="2-2">情感词云图分析</el-menu-item>
-            <el-menu-item index="2-3">评论时间序列</el-menu-item>
+            <el-menu-item index="2-2">评论时间序列</el-menu-item>
+            <el-menu-item index="2-3">产品评论分析</el-menu-item>
             <el-menu-item index="2-4">地理分布分析</el-menu-item>
-            <el-menu-item index="2-5">产品评论分析</el-menu-item>
+            <el-menu-item index="2-5">情感词云图分析</el-menu-item>
+            <el-menu-item index="2-6">评论查询</el-menu-item>
           </el-sub-menu>
 
           <el-sub-menu index="3">

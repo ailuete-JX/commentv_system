@@ -1,6 +1,7 @@
 <template>
   <div class="algorithm-container">
     <el-menu
+      v-if="shouldShowMenu"
       :default-active="activeMenu"
       class="algorithm-menu"
       mode="horizontal"
@@ -21,6 +22,12 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const activeMenu = computed(() => route.path)
+
+// 只在情感分析相关页面显示导航菜单
+const shouldShowMenu = computed(() => {
+  return route.path === '/algorithm/sentiment-model' || 
+         route.path === '/algorithm/sentiment-analysis'
+})
 </script>
 
 <style scoped>
@@ -39,7 +46,5 @@ const activeMenu = computed(() => route.path)
 .algorithm-content {
   flex: 1;
   overflow: hidden;
-  padding: 0;
-  position: relative;
 }
 </style>
