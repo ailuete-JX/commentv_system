@@ -65,6 +65,15 @@ const routes = [
           requiresAuth: true,
           title: '情感分析模型评估'
         }
+      },
+      {
+        path: 'sentiment-analysis',
+        name: 'SentimentAnalysis',
+        component: () => import('../views/algorithm/SentimentAnalysis.vue'),
+        meta: {
+          requiresAuth: true,
+          title: '情感分析使用'
+        }
       }
     ]
   },
