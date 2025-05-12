@@ -14,16 +14,14 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: { requiresAuth: true }
-  },
-  {
+  },  {
     path: '/keywords',
     name: 'KeywordsAnalysis',
     component: () => import('../views/analysis/SentimentAnalysis.vue'),
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/sentiment',
-    name: 'SentimentAnalysis',
+  },  {
+    path: '/emotion',
+    name: 'EmotionAnalysis',
     component: () => import('../views/analysis/KeywordsAnalysis.vue'),
     meta: { requiresAuth: true }
   },

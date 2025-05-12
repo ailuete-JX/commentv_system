@@ -58,9 +58,8 @@ let excelData = {
 
 // 读取Excel文件数据
 const loadExcelData = async () => {
-  try {
-    console.log('开始加载Excel文件...')
-    const response = await fetch('/public/中期后_正负向情感关键词统计.xlsx')
+  try {    console.log('开始加载Excel文件...')
+    const response = await fetch('/中期后_正负向情感关键词统计.xlsx')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }

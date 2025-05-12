@@ -11,13 +11,12 @@ import {
 } from '@element-plus/icons-vue'
 
 const getMenuIndexFromPath = (path) => {
-  const pathMap = {
-    '/': '1',
+  const pathMap = {    '/': '1',
     '/keywords': '2-1',
     '/topics': '2-2',
     '/analysis/product': '2-3',
     '/geographic': '2-4',
-    '/sentiment': '2-5',
+    '/emotion': '2-5',
     '/analysis/comments': '2-6',
     '/algorithm/sentiment-model': '3-1',
     '/algorithm/clustering': '3-2',
@@ -31,8 +30,7 @@ const route = useRoute()
 const isCollapse = ref(false)
 const activeIndex = computed(() => getMenuIndexFromPath(route.path))
 
-const handleMenuSelect = (index) => {
-  switch(index) {
+const handleMenuSelect = (index) => {  switch(index) {
     case '1':
       router.push('/')
       break
@@ -49,7 +47,7 @@ const handleMenuSelect = (index) => {
       router.push('/geographic')
       break
     case '2-5':
-      router.push('/sentiment')
+      router.push('/emotion')
       break
     case '2-6':
       router.push('/analysis/comments')
