@@ -8,7 +8,7 @@
             <div class="overview-item">
               <el-icon class="overview-icon blue-theme"><ChatLineSquare /></el-icon>
               <div class="overview-content">
-                <div class="overview-value">102759</div>
+                <div class="overview-value">55199</div>
                 <div class="overview-label">总评论数</div>
               </div>
             </div>
@@ -134,8 +134,7 @@ const initCharts = () => {
         top: 'middle',
         itemWidth: 10,
         itemHeight: 10
-      },
-      series: [
+      },      series: [
         {
           name: '评分占比',
           type: 'pie',
@@ -148,16 +147,24 @@ const initCharts = () => {
             borderWidth: 2
           },
           label: {
-            show: false
+            show: true,
+            position: 'outside',
+            formatter: '{b}\n{c}条\n{d}%',
+            textStyle: {
+              fontSize: 12
+            }
           },
           labelLine: {
-            show: false
+            show: true,
+            length: 15,
+            length2: 15,
+            smooth: true
           },
           emphasis: {
             label: {
               show: true,
-              fontSize: '14',
-              formatter: '{b}\n{c}%'
+              fontSize: 14,
+              fontWeight: 'bold'
             }
           },
           data: [

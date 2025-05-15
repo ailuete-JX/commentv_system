@@ -70,9 +70,12 @@
         v-loading="loading"
         height="calc(100vh - 220px)"
         size="small"
-      >
-        <el-table-column prop="用户ID" label="用户ID" width="140" />
-        <el-table-column prop="评论时间" label="评论时间" width="140" />
+      >        <el-table-column prop="用户ID" label="用户ID" width="140" />
+        <el-table-column prop="评论时间" label="评论时间" width="140">
+          <template #default="scope">
+            {{ formatExcelDate(scope.row.评论时间) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="评论内容" label="评论内容" min-width="400" show-overflow-tooltip>
           <template #default="scope">
             <div style="white-space: pre-line;">{{ scope.row.评论内容 }}</div>
@@ -115,6 +118,18 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import * as XLSX from 'xlsx'
 import { ElMessage } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
+
+// Excel日期转换函数
+const formatExcelDate = (serialNumber) => {
+  if (!serialNumber) return '-'
+  // Excel的日期是从1900年1月1日开始的序列号
+  const date = new Date((serialNumber - 25569) * 86400 * 1000)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
 //评论数据查询图
 // 日期快捷选项
 const dateShortcuts = [

@@ -74,17 +74,10 @@ const routes = [
         }
       }
     ]
-  },
-  {
+  },  {
     path: '/algorithm/clustering',
     name: 'TopicsClustering',
     component: () => import('../views/algorithm/TopicsClustering.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/suggestions',
-    name: 'Suggestions',
-    component: () => import('../views/Suggestions.vue'),
     meta: { requiresAuth: true }
   }
 ]

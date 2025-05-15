@@ -91,15 +91,19 @@ const initRadarChart = () => {
       orient: 'horizontal',
       top: 25,
       left: 'center'
-    },
-    radar: {
+    },    radar: {
       indicator: metrics.map(name => ({ 
-        name, 
+        name,
         min: 85,
-        max: 100 
+        max: 100
       })),
       center: ['50%', '55%'],
       radius: '70%',
+      axisName: {
+        color: '#000000',
+        fontSize: 12,
+        padding: [3, 5]
+      },
       splitLine: {
         lineStyle: {
           color: '#ddd'

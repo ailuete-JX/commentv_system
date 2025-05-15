@@ -75,12 +75,14 @@ const loadExternalScripts = () => {
 }
 
 // 添加 CSS 引入
-const loadExternalStyles = () => {
+const loadExternalStyles = (iframeDocument) => {
   const link = document.createElement('link')
   link.rel = 'stylesheet'
   link.type = 'text/css'
   link.href = 'https://cdn.jsdelivr.net/gh/bmabey/pyLDAvis@3.4.0/pyLDAvis/js/ldavis.v1.0.0.css'
-  document.head.appendChild(link)
+  if (iframeDocument) {
+    iframeDocument.head.appendChild(link)
+  }
 }
 
 // 监听选择变化
@@ -99,6 +101,7 @@ const handleIframeLoad = (event) => {
     }
 
     const iframeDoc = iframe.contentWindow.document
+    loadExternalStyles(iframeDoc)
     const style = iframeDoc.createElement('style')
     
     // 获取容器尺寸
@@ -172,7 +175,6 @@ const handleIframeError = (e) => {
 // 组件挂载时初始化
 onMounted(async () => {
   loadExternalScripts()
-  loadExternalStyles()
   
   try {
     const response = await fetch(currentUrl.value)

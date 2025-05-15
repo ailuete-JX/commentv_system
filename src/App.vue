@@ -16,11 +16,9 @@ const getMenuIndexFromPath = (path) => {
     '/topics': '2-2',
     '/analysis/product': '2-3',
     '/geographic': '2-4',
-    '/emotion': '2-5',
-    '/analysis/comments': '2-6',
+    '/emotion': '2-5',    '/analysis/comments': '2-6',
     '/algorithm/sentiment-model': '3-1',
-    '/algorithm/clustering': '3-2',
-    '/suggestions': '4'
+    '/algorithm/clustering': '3-2'
   }
   return pathMap[path] || '1'
 }
@@ -30,7 +28,8 @@ const route = useRoute()
 const isCollapse = ref(false)
 const activeIndex = computed(() => getMenuIndexFromPath(route.path))
 
-const handleMenuSelect = (index) => {  switch(index) {
+const handleMenuSelect = (index) => {
+  switch(index) {
     case '1':
       router.push('/')
       break
@@ -57,9 +56,6 @@ const handleMenuSelect = (index) => {  switch(index) {
       break
     case '3-2':
       router.push('/algorithm/clustering')
-      break
-    case '4':
-      router.push('/suggestions')
       break
   }
 }
@@ -99,9 +95,7 @@ const handleLogout = () => {
             <el-menu-item index="2-4">地理分布分析</el-menu-item>
             <el-menu-item index="2-5">情感词云图分析</el-menu-item>
             <el-menu-item index="2-6">评论查询</el-menu-item>
-          </el-sub-menu>
-
-          <el-sub-menu index="3">
+          </el-sub-menu>          <el-sub-menu index="3">
             <template #title>
               <el-icon><Monitor /></el-icon>
               <span>算法分析</span>
@@ -109,11 +103,6 @@ const handleLogout = () => {
             <el-menu-item index="3-1">情感分析模型</el-menu-item>
             <el-menu-item index="3-2">主题聚类分析</el-menu-item>
           </el-sub-menu>
-
-          <el-menu-item index="4">
-            <el-icon><Notification /></el-icon>
-            <template #title>智能建议</template>
-          </el-menu-item>
         </el-menu>
       </el-aside>
 
