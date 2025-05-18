@@ -6,6 +6,58 @@ import time
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import os
+import sys
+from openai import OpenAI
+
+# 获取当前文件所在目录的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+deepseek_file = os.path.join(current_dir, 'public', 'deepseek大模型调用', 'deepseek调用测试1.0.py')
+
+# 导入 deepseek 相关函数
+def get_completion(prompt, temperature=0.7):
+    """调用硅基流动API"""
+    url = 'https://api.siliconflow.cn/v1/'
+    api_key = 'sk-nvgchpifyvgkzlspzujqrojzfhpjsavcqnnjwjpshomrvfyr'
+
+    client = OpenAI(
+        base_url=url,
+        api_key=api_key
+    )
+    
+    messages = [{"role": "user", "content": prompt}]
+    
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-ai/DeepSeek-R1",
+            messages=messages,
+            stream=False,
+            temperature=temperature,
+            max_tokens=1024
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"API调用失败: {str(e)}")
+        return None
+
+def get_optimization_suggestion(comment):
+    """根据用户评论生成优化建议"""
+    prompt = f"""作为一个专业的产品经理和扫地机器人专家，请仔细分析以下用户评论，并提供具体的产品优化建议。
+评论内容："{comment}"
+
+请从以下几个方面提供优化建议：
+1. 产品功能方面
+2. 用户体验方面
+3. 可能的技术改进
+4. 其他建议
+
+请给出详细但简洁的建议，每个方面不超过2-3点，确保建议具有可操作性。"""
+    
+    try:
+        result = get_completion(prompt)
+        return result if result else "抱歉，暂时无法生成优化建议。"
+    except Exception as e:
+        print(f"生成优化建议时出错: {str(e)}")
+        return "系统处理出错，请稍后重试。"
 
 app = Flask(__name__)
 
@@ -49,6 +101,51 @@ def handle_error(error):
         'error': '服务器内部错误',
         'message': str(error)
     }), 500
+
+def get_completion(prompt, temperature=0.7):
+    """调用硅基流动API"""
+    url = 'https://api.siliconflow.cn/v1/'
+    api_key = 'sk-nvgchpifyvgkzlspzujqrojzfhpjsavcqnnjwjpshomrvfyr'
+
+    client = OpenAI(
+        base_url=url,
+        api_key=api_key
+    )
+    
+    messages = [{"role": "user", "content": prompt}]
+    
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-ai/DeepSeek-R1",
+            messages=messages,
+            stream=False,
+            temperature=temperature,
+            max_tokens=1024
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"API调用失败: {str(e)}")
+        return None
+
+def get_optimization_suggestion(comment):
+    """根据用户评论生成优化建议"""
+    prompt = f"""作为一个专业的产品经理和扫地机器人专家，请仔细分析以下用户评论，并提供具体的产品优化建议。
+评论内容："{comment}"
+
+请从以下几个方面提供优化建议：
+1. 产品功能方面
+2. 用户体验方面
+3. 可能的技术改进
+4. 其他建议
+
+请给出详细但简洁的建议，每个方面不超过2-3点，确保建议具有可操作性。"""
+    
+    try:
+        result = get_completion(prompt)
+        return result if result else "抱歉，暂时无法生成优化建议。"
+    except Exception as e:
+        print(f"生成优化建议时出错: {str(e)}")
+        return "系统处理出错，请稍后重试。"
 
 @app.route('/api/token', methods=['GET'])
 def get_token():
@@ -154,6 +251,22 @@ def analyze_sentiment():
         error_msg = f"处理情感分析时发生未知错误: {str(e)}"
         logger.error(error_msg)
         return jsonify({'error': f'服务器错误: {str(e)}'}), 500
+
+@app.route('/api/get_optimization_suggestion', methods=['POST'])
+def optimization_suggestion():
+    try:
+        data = request.get_json()
+        comment = data.get('comment')
+        
+        if not comment:
+            return jsonify({'error': '评论内容不能为空'}), 400
+            
+        suggestion = get_optimization_suggestion(comment)
+        return jsonify({'suggestion': suggestion})
+        
+    except Exception as e:
+        app.logger.error(f"生成优化建议时出错: {str(e)}")
+        return jsonify({'error': '处理请求时发生错误'}), 500
 
 if __name__ == '__main__':
     logger.info("正在启动Flask服务器...")

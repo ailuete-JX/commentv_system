@@ -79,6 +79,12 @@ const routes = [
     name: 'TopicsClustering',
     component: () => import('../views/algorithm/TopicsClustering.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/optimization',
+    name: 'OptimizationSuggestion',
+    component: () => import('../views/analysis/OptimizationSuggestion.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
