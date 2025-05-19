@@ -111,9 +111,8 @@ const handleIframeLoad = (event) => {
     
     // 小屏幕下设置自适应缩放
     const screenWidth = window.innerWidth
-    //const scale = screenWidth < 2000 ? 0.6 : 1
-    //const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0. : 1
-    const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0.8 : 1
+    const scale = screenWidth < 2000 ? Math.min(containerWidth / 1024, containerHeight / 768) * 0.9 : 1 // 增加缩放比例
+
     // 设置页面缩放和布局
     style.textContent = `
       html, body {
@@ -126,6 +125,7 @@ const handleIframeLoad = (event) => {
       body {
         position: absolute;
         left: 50%;
+        top: 0;
         transform: translateX(-50%) scale(${scale});
         transform-origin: top center;
         width: ${Math.ceil(100/scale)}% !important;
@@ -140,11 +140,13 @@ const handleIframeLoad = (event) => {
         width: 100% !important;
         height: auto !important;
         display: block !important;
+        transform-origin: top center !important;
       }
       .bubble-tool, svg {
         width: 100% !important;
         height: auto !important;
         max-width: none !important;
+        transform-origin: top center !important;
       }
     `
     iframeDoc.head.appendChild(style)
@@ -192,35 +194,36 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 124px); /* 减小头部边距 */
+  height: calc(100vh - 60px); /* 进一步减小顶部空间 */
   overflow: hidden;
   background-color: #fff;
-  padding: 8px; /* 减小内边距 */
+  padding: 0; /* 移除内边距 */
 }
 
 .filter-container {
   display: flex;
-  gap: 12px;
-  padding: 4px 12px; /* 减小过滤器的上下内边距 */
-  margin-bottom: 8px; /* 减小下边距 */
+  gap: 6px;
+  padding: 2px 4px; /* 进一步减小过滤器内边距 */
+  margin-bottom: 2px; /* 减小下边距 */
   background-color: #fff;
   z-index: 1;
 }
 
 .filter-item {
-  width: 140px;
+  width: 110px; /* 继续减小选择器宽度 */
 }
 
 .visualization-container {
   position: relative;
   flex: 1;
   width: 100%;
-  height: calc(100% - 44px); /* 减小过滤器占用的空间 */
+  height: calc(100% - 32px); /* 减小过滤器占用空间 */
   overflow: hidden;
   background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0; /* 移除所有边距 */
 }
 
 .lda-iframe {
@@ -230,6 +233,11 @@ onMounted(async () => {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .error-message {

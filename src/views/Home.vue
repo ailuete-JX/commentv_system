@@ -199,106 +199,122 @@ onBeforeUnmount(() => {
 <style scoped>
 .home-container {
   height: 100%;
-  padding: 16px;
+  padding: 20px;
   box-sizing: border-box;
-  background-color: #f5f7fa;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px; /* 增加间距 */
 }
 
 .overview-section {
   flex: 0 0 auto;
-  margin-bottom: 8px;
 }
 
 .overview-card {
-  height: 100px;
-  transition: all 0.3s;
+  height: 110px; /* 稍微增加卡片高度 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px; /* 增加圆角 */
 }
 
 .overview-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
 .overview-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
+  gap: 20px;
+  padding: 20px;
   height: 100%;
 }
 
 .overview-icon {
-  font-size: 32px;
-  padding: 12px;
-  border-radius: 8px;
+  font-size: 36px; /* 增大图标 */
+  padding: 14px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s;
 }
 
+/* 优化主题色 */
 .blue-theme {
   color: #409EFF;
-  background-color: rgba(64, 158, 255, 0.1);
+  background-color: rgba(64, 158, 255, 0.12);
 }
 
 .green-theme {
   color: #67C23A;
-  background-color: rgba(103, 194, 58, 0.1);
+  background-color: rgba(103, 194, 58, 0.12);
 }
 
 .orange-theme {
   color: #E6A23C;
-  background-color: rgba(230, 162, 60, 0.1);
+  background-color: rgba(230, 162, 60, 0.12);
 }
 
 .overview-content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .overview-value {
-  font-size: 24px;
+  font-size: 28px; /* 增大数字 */
   font-weight: 600;
   color: #303133;
   line-height: 1.2;
+  letter-spacing: 0.5px;
 }
 
 .overview-label {
-  font-size: 14px;
-  color: #909399;
+  font-size: 15px;
+  color: #606266;
+  font-weight: 500;
 }
 
 .charts-section {
   flex: 1;
   display: flex;
-  margin-top: 16px;
+  margin-top: 0;
+  background-color: #fff;
 }
 
 .chart-row {
   flex: 1;
   margin: 0 !important;
+  background-color: #fff;
 }
 
 .chart-card {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 220px);
   display: flex;
   flex-direction: column;
+  background-color: #fff;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
 .chart-header {
-  padding: 12px 16px;
-  font-size: 16px;
+  padding: 16px 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #303133;
   border-bottom: 1px solid #ebeef5;
+  letter-spacing: 0.5px;
 }
 
 .chart-wrapper {
   flex: 1;
-  padding: 16px;
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,6 +328,14 @@ onBeforeUnmount(() => {
 
 :deep(.el-card) {
   height: 100%;
+  background-color: #fff;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+:deep(.el-card:hover) {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
 :deep(.el-card__body) {
@@ -321,7 +345,14 @@ onBeforeUnmount(() => {
   flex-direction: column;
 }
 
+:deep(.el-row) {
+  margin-left: -12px !important;
+  margin-right: -12px !important;
+}
+
 :deep(.el-col) {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
   height: 100%;
 }
 </style>

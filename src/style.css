@@ -23,6 +23,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  overflow-x: hidden;
 }
 
 a {
@@ -67,4 +68,24 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c0c4cc;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #909399;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }

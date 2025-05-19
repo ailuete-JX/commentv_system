@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const userComment = ref('')
@@ -68,12 +68,32 @@ function addMessage(content, type = 'user') {
     type,
     time: formatTime()
   })
-  // 滚动到底部
-  setTimeout(() => {
-    if (messagesContainer.value) {
-      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-    }
-  }, 100)
+  
+  // 使用 nextTick 确保 DOM 更新后再滚动
+  nextTick(() => {
+    scrollToBottom()
+  })
+}
+
+// 滚动到底部的函数
+function scrollToBottom() {
+  if (messagesContainer.value) {
+    const container = messagesContainer.value
+    const scrollHeight = container.scrollHeight
+    
+    // 使用动画滚动到底部
+    container.scrollTo({
+      top: scrollHeight,
+      behavior: 'smooth'
+    })
+    
+    // 双重检查，确保真的滚动到底部
+    setTimeout(() => {
+      if (container.scrollTop + container.clientHeight < scrollHeight) {
+        container.scrollTop = scrollHeight
+      }
+    }, 100)
+  }
 }
 
 async function getOptimizationSuggestion() {
@@ -137,10 +157,12 @@ async function getOptimizationSuggestion() {
 
 <style scoped>
 .optimization-suggestion {
-  height: calc(100vh - 100px);
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 20px 0 20px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  overflow: hidden; /* 防止出现外层滚动条 */
 }
 
 h2 {
@@ -157,18 +179,20 @@ h2 {
   flex-direction: column;
   background-color: #f9f9f9;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
-  height: 100%;
   position: relative;
+  margin: 12px 0; /* 上下添加间距 */
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 20px 60px 20px; /* 底部留出输入区域空间 */
+  padding: 16px 20px 80px 20px; /* 增加底部内边距，确保内容不被输入框遮挡 */
   background-color: #fff;
   min-height: 200px; /* 确保内容区域有最小高度 */
+  scroll-behavior: smooth; /* 添加平滑滚动效果 */
+  overscroll-behavior: contain; /* 防止滚动传递 */
 }
 
 .empty-state {
@@ -183,7 +207,8 @@ h2 {
 .message-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  padding-bottom: 20px; /* 确保最后一条消息有足够空间 */
 }
 
 .message {
@@ -238,10 +263,12 @@ h2 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95); /* 半透明背景 */
   border-top: 1px solid #ebeef5;
-  padding: 4px 12px;
+  padding: 8px 12px;
   z-index: 2;
+  backdrop-filter: blur(8px); /* 添加模糊效果 */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* 添加上阴影 */
 }
 
 .input-container {
