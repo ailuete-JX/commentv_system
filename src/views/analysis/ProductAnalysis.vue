@@ -56,37 +56,51 @@ const initTrendChart = () => {
   nextTick(() => {
     trendChart = echarts.init(trendChartRef.value)
     
-    const option = {
-      title: {
+    const option = {      title: {
         text: '各品牌月度评分变化趋势',
         left: 'center',
         top: '10px',
         textStyle: {
           fontSize: 16,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: '#303133'
         }
       },
       tooltip: {
         trigger: 'axis',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        textStyle: {
+          color: '#333'
+        },
         formatter: function(params) {
-          let result = params[0].axisValue + '<br/>'
+          let result = '<div style="font-weight: bold; margin-bottom: 3px;">' + params[0].axisValue + '</div>'
           params.forEach(param => {
             if (!isNaN(param.value)) {
-              result += param.marker + param.seriesName + ': ' + param.value.toFixed(2) + '<br/>'
+              result += '<div style="display: flex; justify-content: space-between; margin: 3px 0;">'
+              result += '<span>' + param.marker + param.seriesName + ':</span>'
+              result += '<span style="font-weight: bold; margin-left: 15px;">' + param.value.toFixed(2) + '</span>'
+              result += '</div>'
             }
           })
           return result
         }
-      },
-      legend: {
+      },      legend: {
         data: trendData.series.map(item => item.name),
         bottom: '5px',
         type: 'scroll',
         textStyle: {
-          fontSize: 12
-        }
-      },
-      grid: {
+          fontSize: 12,
+          color: '#666'
+        },
+        itemGap: 15,
+        itemWidth: 15,
+        itemHeight: 10,
+        padding: [8, 20],
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        borderRadius: 4
+      },grid: {
         left: '5%',
         right: '5%',
         bottom: '15%',
@@ -99,20 +113,64 @@ const initTrendChart = () => {
         data: trendData.dates,
         axisLabel: {
           rotate: 45,
-          fontSize: 11,
-          interval: 2
+          fontSize: 12,
+          interval: 2,
+          color: '#666'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ddd'
+          }
+        },
+        axisTick: {
+          show: false
         }
       },
       yAxis: {
         type: 'value',
         name: '平均评分',
+        nameTextStyle: {
+          color: '#666',
+          fontSize: 12,
+          padding: [0, 30, 0, 0]
+        },
         min: 1,
-        max: 5
-      },
-      series: trendData.series.map(item => ({
+        max: 5,
+        splitLine: {
+          lineStyle: {
+            type: 'dashed',
+            color: '#eee'
+          }
+        },
+        axisLabel: {
+          color: '#666',
+          fontSize: 12
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        }
+      },series: trendData.series.map((item, index) => ({
         name: item.name,
         type: 'line',
         smooth: true,
+        symbolSize: 6,
+        lineStyle: {
+          width: 3
+        },
+        itemStyle: {
+          borderWidth: 2
+        },
+        emphasis: {
+          focus: 'series',
+          blurScope: 'coordinateSystem',
+          scale: 1.1,
+          itemStyle: {
+            borderWidth: 3
+          }
+        },
         data: item.data
       }))
     }
@@ -137,14 +195,14 @@ const initFinalScoreChart = () => {
   nextTick(() => {
     finalScoreChart = echarts.init(finalScoreRef.value)
     
-    const option = {
-      title: {
+    const option = {      title: {
         text: '各品牌最终评分对比',
         left: 'center',
         top: '10px',
         textStyle: {
           fontSize: 16,
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: '#303133'
         }
       },
       tooltip: {
@@ -152,9 +210,22 @@ const initFinalScoreChart = () => {
         axisPointer: {
           type: 'shadow'
         },
-        formatter: '{b}: {c}分'
-      },
-      grid: {
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        textStyle: {
+          color: '#333'
+        },
+        formatter: function(params) {
+          return `<div style="font-weight: bold">${params[0].name}</div>
+                  <div style="margin-top: 5px">
+                    <span>评分：</span>
+                    <span style="font-weight: bold; color: #409EFF">
+                      ${params[0].value}分
+                    </span>
+                  </div>`
+        }
+      },      grid: {
         left: '10%',
         right: '10%',
         bottom: '10%',
@@ -165,11 +236,18 @@ const initFinalScoreChart = () => {
         type: 'category',
         data: brandScores.map(item => item.brand),
         axisTick: {
-          alignWithLabel: true
+          show: false
         },
         axisLabel: {
           interval: 0,
-          fontSize: 12
+          fontSize: 13,
+          color: '#333',
+          fontWeight: 'bold'
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#ddd'
+          }
         }
       },
       yAxis: {
@@ -179,28 +257,52 @@ const initFinalScoreChart = () => {
         interval: 0.2,
         axisLabel: {
           formatter: '{value}分',
-          fontSize: 12
+          fontSize: 12,
+          color: '#666'
+        },
+        splitLine: {
+          lineStyle: {
+            type: 'dashed',
+            color: '#eee'
+          }
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
         }
-      },
-      series: [{
+      },series: [{
         name: '评分',
         type: 'bar',
         data: brandScores.map(item => ({
           value: item.score.toFixed(2),
           itemStyle: {
             color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
-              { offset: 0, color: '#83bff6' },
-              { offset: 0.5, color: '#188df0' },
-              { offset: 1, color: '#188df0' }
-            ])
+              { offset: 0, color: 'rgba(64, 158, 255, 0.2)' },
+              { offset: 0.5, color: 'rgba(64, 158, 255, 0.7)' },
+              { offset: 1, color: 'rgba(64, 158, 255, 0.9)' }
+            ]),
+            borderRadius: [6, 6, 0, 0]
           }
         })),
-        barWidth: '30%',
+        barWidth: '40%',
         label: {
           show: true,
           position: 'top',
           formatter: '{c}分',
-          fontSize: 12
+          fontSize: 13,
+          fontWeight: 'bold',
+          color: '#409EFF'
+        },
+        emphasis: {
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+              { offset: 0, color: 'rgba(64, 158, 255, 0.3)' },
+              { offset: 0.7, color: 'rgba(64, 158, 255, 0.8)' },
+              { offset: 1, color: 'rgba(64, 158, 255, 1)' }
+            ])
+          }
         }
       }]
     }
@@ -245,6 +347,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
 }
 
 :deep(.el-card__body) {
@@ -253,6 +357,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
 }
 
 .chart-section {
@@ -260,7 +365,17 @@ onUnmounted(() => {
   position: relative;
   height: calc(50% - 10px);
   min-height: 0;
-  margin: 5px 0;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+.chart-section:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .trend-chart,
@@ -268,5 +383,6 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   min-height: 0;
+  border-radius: 6px;
 }
 </style>

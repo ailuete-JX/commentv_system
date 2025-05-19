@@ -96,8 +96,8 @@ const handleLogout = () => {
               <span>描述性分析</span>
             </template>
             <el-menu-item index="2-1">高频词分析</el-menu-item>
-            <el-menu-item index="2-2">评论时间序列</el-menu-item>
-            <el-menu-item index="2-3">产品评论分析</el-menu-item>
+            <el-menu-item index="2-2">时间序列分析</el-menu-item>
+            <el-menu-item index="2-3">产品评分分析</el-menu-item>
             <el-menu-item index="2-4">地理分布分析</el-menu-item>
             <el-menu-item index="2-5">情感词云图分析</el-menu-item>
             <el-menu-item index="2-6">评论查询</el-menu-item>
@@ -188,15 +188,24 @@ const handleLogout = () => {
 .menu-vertical {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
-}
-
-.menu-vertical .el-menu-item,
+}  .menu-vertical .el-menu-item,
 .menu-vertical .el-sub-menu__title {
   background-color: #F7F7F7 !important;
   color: #333 !important;
   border-radius: 6px;
   margin: 2px 6px;
   transition: background 0.2s;
+}
+
+/* 统一所有一级菜单项的内边距 */
+.menu-vertical > .el-menu-item,
+.menu-vertical > .el-sub-menu > .el-sub-menu__title {
+  padding-left: 16px !important;
+}
+
+/* 子菜单项的内边距 */
+.menu-vertical .el-menu--inline .el-menu-item {
+  padding-left: 40px !important;
 }
 
 .menu-vertical .el-menu-item.is-active {
@@ -213,6 +222,7 @@ const handleLogout = () => {
 
 .menu-vertical .el-menu-item .el-icon,
 .menu-vertical .el-sub-menu__title .el-icon {
+  margin-right: 10px !important; /* 统一图标和文字间距 */
   color: #1976d2;
 }
 

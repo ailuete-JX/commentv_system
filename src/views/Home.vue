@@ -96,8 +96,7 @@ const initCharts = () => {
           type: 'pie',
           radius: ['20%', '65%'],
           center: ['50%', '45%'],
-          roseType: 'area',
-          itemStyle: {
+          roseType: 'area',          itemStyle: {
             borderRadius: 8,
             borderColor: '#fff',
             borderWidth: 2
@@ -106,8 +105,7 @@ const initCharts = () => {
             show: true,
             position: 'outside',
             formatter: '{b}\n{c}条'
-          },
-          data: [
+          },          data: [
             { value: 11931, name: '科沃斯', itemStyle: { color: '#91cc75' } },
             { value: 12132, name: '小米', itemStyle: { color: '#fac858' } },
             { value: 12781, name: '石头', itemStyle: { color: '#ee6666' } },
@@ -123,11 +121,22 @@ const initCharts = () => {
   if (ratingPieRef.value) {
     const ratingChart = echarts.init(ratingPieRef.value)
     charts.push(ratingChart)
-    ratingChart.setOption({
-      tooltip: {
+    ratingChart.setOption({      tooltip: {
         trigger: 'item',
-        formatter: '{b}: {c}%'
+        formatter: function(params) {
+          return `${params.name}评价：${params.value}条 (${params.percent.toFixed(1)}%)`;
+        },
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        borderColor: '#eee',
+        borderWidth: 1,
+        textStyle: {
+          color: '#666'
+        },
+        extraCssText: 'box-shadow: 0 4px 12px rgba(0,0,0,0.1);border-radius:8px;padding:10px;'
       },
+      animation: true,
+      animationDuration: 1000,
+      animationEasing: 'cubicOut',
       legend: {
         orient: 'vertical',
         right: '5%',
@@ -136,10 +145,9 @@ const initCharts = () => {
         itemHeight: 10
       },      series: [
         {
-          name: '评分占比',
-          type: 'pie',
+          name: '评分占比',          type: 'pie',
           radius: ['35%', '60%'],
-          center: ['40%', '50%'],
+          center: ['50%', '50%'],
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: 10,
@@ -166,13 +174,27 @@ const initCharts = () => {
               fontSize: 14,
               fontWeight: 'bold'
             }
-          },
-          data: [
-            { value: 36856, name: '5星', itemStyle: { color: '#67C23A' } },
-            { value: 266, name: '4星', itemStyle: { color: '#95d475' } },
-            { value: 1306, name: '3星', itemStyle: { color: '#e6a23c' } },
-            { value: 688, name: '2星', itemStyle: { color: '#f56c6c' } },
-            { value: 4052, name: '1星', itemStyle: { color: '#909399' } }
+          },          data: [
+            { value: 36856, name: '5星', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#95eb74' },
+              { offset: 1, color: '#47c322' }
+            ])} },
+            { value: 266, name: '4星', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#a8ff96' },
+              { offset: 1, color: '#67c23a' }
+            ])} },
+            { value: 1306, name: '3星', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#ffd596' },
+              { offset: 1, color: '#e6a23c' }
+            ])} },
+            { value: 688, name: '2星', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#ff9696' },
+              { offset: 1, color: '#f56c6c' }
+            ])} },
+            { value: 4052, name: '1星', itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#b4b4b4' },
+              { offset: 1, color: '#909399' }
+            ])} }
           ]
         }
       ]
@@ -201,10 +223,10 @@ onBeforeUnmount(() => {
   height: 100%;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: #f5f7fa;
   display: flex;
   flex-direction: column;
-  gap: 24px; /* 增加间距 */
+  gap: 24px;
 }
 
 .overview-section {
@@ -293,14 +315,15 @@ onBeforeUnmount(() => {
   height: calc(100vh - 220px);
   display: flex;
   flex-direction: column;
-  background-color: #fff;
+  background: linear-gradient(to bottom, #ffffff, #fafbfc);
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chart-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
 }
 
 .chart-header {

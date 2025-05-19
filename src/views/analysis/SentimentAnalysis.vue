@@ -85,7 +85,7 @@ const negativeData = [
   { name: '垃圾', value: 0.0590 },
   { name: '基站', value: 0.0578 },
   { name: '降价', value: 0.0526 },
-  { name: '差评', value: 0.0524 }
+  { name: '安装', value: 0.0524 }
 ]
 
 const updateChart = () => {
@@ -98,21 +98,22 @@ const updateChart = () => {
     const option = {      title: [
         {
           text: '负面情感倾向评论',
-          left: '30%',
-          top: 5,
+          left: '25%',
+          top: 10,
           textStyle: {
-            fontSize: 13,
-            fontWeight: 'normal',
-            color: '#666'
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#F56C6C'
           }
         },
-        {          text: '正面情感倾向评论',
-          left: '57%',
-          top: 5,
+        {
+          text: '正面情感倾向评论',
+          left: '62%',
+          top: 10,
           textStyle: {
-            fontSize: 13,
-            fontWeight: 'normal',
-            color: '#666'
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: '#546DB5'
           }
         }
       ],
@@ -158,17 +159,17 @@ const updateChart = () => {
           color: '#546DB5'
         }
       }],
-      yAxis: [{
-        type: 'category',
+      yAxis: [{        type: 'category',
         inverse: true,
         position: 'right',
         axisLine: { show: false },
         axisTick: { show: false },
         axisLabel: {
           align: 'left',
-          margin: 0,
-          fontSize: 12,
-          color: '#666'
+          margin: 5,
+          fontSize: 13,
+          color: '#333',
+          fontWeight: 'bold'
         },
         data: negativeData.map(item => item.name)
       }, {
@@ -180,9 +181,10 @@ const updateChart = () => {
         axisTick: { show: false },
         axisLabel: {
           align: 'right',
-          margin: 0,
-          fontSize: 12,
-          color: '#666'
+          margin: 5,
+          fontSize: 13,
+          color: '#333',
+          fontWeight: 'bold'
         },
         data: positiveData.map(item => item.name)
       }],
@@ -190,23 +192,25 @@ const updateChart = () => {
         name: '负面情感倾向评论',
         type: 'bar',        xAxisIndex: 0,
         yAxisIndex: 0,        label: {
-          show: true,
-          position: 'left',
+          show: true,          position: 'left',
           formatter: function(params) {
-            return params.value.toString();
+            return parseFloat(params.value).toFixed(4);
           },
           color: '#F56C6C',
-          fontSize: 12
+          fontSize: 12,
+          fontWeight: 'bold',
+          distance: 5
         },
-        barWidth: '60%',
+        barWidth: '70%',
         itemStyle: {
           color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
             offset: 0,
-            color: '#ff9696'
+            color: 'rgba(245,108,108,0.2)'
           }, {
             offset: 1,
-            color: '#F56C6C'
-          }])
+            color: 'rgba(245,108,108,0.8)'
+          }]),
+          borderRadius: [0, 4, 4, 0]
         },
         data: negativeData.map(item => item.value.toFixed(4))
       }, {
@@ -215,23 +219,25 @@ const updateChart = () => {
         xAxisIndex: 1,
         yAxisIndex: 1,
         label: {
-          show: true,
-          position: 'right',
+          show: true,          position: 'right',
           formatter: function(params) {
-            return params.value.toString();
+            return parseFloat(params.value).toFixed(4);
           },
           color: '#546DB5',
-          fontSize: 12
+          fontSize: 12,
+          fontWeight: 'bold',
+          distance: 5
         },
-        barWidth: '60%',
+        barWidth: '70%',
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
             offset: 0,
-            color: '#73ADD5'
+            color: 'rgba(84,109,181,0.2)'
           }, {
             offset: 1,
-            color: '#546DB5'
-          }])
+            color: 'rgba(84,109,181,0.8)'
+          }]),
+          borderRadius: [4, 0, 0, 4]
         },
         data: positiveData.map(item => item.value.toFixed(4))
       }]
