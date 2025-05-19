@@ -192,17 +192,18 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 124px); /* 减小头部边距 */
   overflow: hidden;
   background-color: #fff;
+  padding: 8px; /* 减小内边距 */
 }
 
 .filter-container {
   display: flex;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 4px 12px; /* 减小过滤器的上下内边距 */
+  margin-bottom: 8px; /* 减小下边距 */
   background-color: #fff;
-  border-bottom: 1px solid #eee;
   z-index: 1;
 }
 
@@ -214,7 +215,7 @@ onMounted(async () => {
   position: relative;
   flex: 1;
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100% - 44px); /* 减小过滤器占用的空间 */
   overflow: hidden;
   background-color: #fff;
   display: flex;
@@ -224,13 +225,11 @@ onMounted(async () => {
 
 .lda-iframe {
   border: none;
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .error-message {

@@ -80,9 +80,9 @@ const handleLogout = () => {
           :default-active="activeIndex"
           class="menu-vertical"
           :collapse="isCollapse"
-          background-color="#545c64"
-          text-color="#fff"
-          active-text-color="#ffd04b"
+          background-color="#F7F7F7"
+          text-color="#333"
+          active-text-color="#1976d2"
           @select="handleMenuSelect"
         >
           <el-menu-item index="1">
@@ -137,9 +137,7 @@ const handleLogout = () => {
         </el-header>
 
         <el-main class="layout-main">
-          <div class="main-content">
-            <router-view></router-view>
-          </div>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -162,29 +160,85 @@ const handleLogout = () => {
 .menu-aside {
   height: 100%;
   transition: width 0.3s;
-  background-color: #545c64;
+  background-color: #F7F7F7;
+  border-right: 1.5px solid #e5e7eb; /* 更柔和的分割线 */
+  box-shadow: none; /* 去除阴影 */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 16px; /* 圆角过渡 */
+  border-bottom-right-radius: 16px;
+  z-index: 2;
 }
 
 .menu-vertical {
   height: 100%;
   border-right: none;
+  background-color: #F7F7F7;
+  color: #333;
+  font-weight: 500;
+  font-size: 15px;
+  overflow: hidden; /* 禁止滚动条 */
+}
+
+.menu-vertical::-webkit-scrollbar {
+  width: 0 !important;
+  display: none !important;
+}
+
+.menu-vertical {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.menu-vertical .el-menu-item,
+.menu-vertical .el-sub-menu__title {
+  background-color: #F7F7F7 !important;
+  color: #333 !important;
+  border-radius: 6px;
+  margin: 2px 6px;
+  transition: background 0.2s;
+}
+
+.menu-vertical .el-menu-item.is-active {
+  background-color: #e3edfa !important;
+  color: #1976d2 !important;
+  font-weight: bold;
+}
+
+.menu-vertical .el-menu-item:hover,
+.menu-vertical .el-sub-menu__title:hover {
+  background-color: #f0f4fa !important;
+  color: #1976d2 !important;
+}
+
+.menu-vertical .el-menu-item .el-icon,
+.menu-vertical .el-sub-menu__title .el-icon {
+  color: #1976d2;
 }
 
 .layout-header {
   height: 60px;
   line-height: 60px;
   background-color: #fff;
-  border-bottom: 1px solid #dcdfe6;
+  border-bottom: 1px solid #f0f0f0;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.02);
 }
 
 .header-left {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.header-left h2 {
+  font-size: 20px;
+  color: #222;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .header-right {
@@ -195,6 +249,8 @@ const handleLogout = () => {
 .collapse-btn {
   font-size: 20px;
   cursor: pointer;
+  color: #1976d2;
+  transition: color 0.2s;
 }
 
 .collapse-btn:hover {
@@ -203,15 +259,11 @@ const handleLogout = () => {
 
 .layout-main {
   height: calc(100% - 60px);
-  background-color: #f0f2f5;
-  padding: 16px;
+  background-color: #fcfdff;
+  padding: 32px 32px 24px 32px;
   overflow-y: auto;
-}
-
-.main-content {
-  background-color: #fff;
-  border-radius: 4px;
-  padding: 16px;
-  height: 100%;
+  border-radius: 0 12px 0 0; /* 右上圆角，左侧无圆角 */
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.03);
+  margin-left: 0;
 }
 </style>
