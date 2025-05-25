@@ -259,13 +259,21 @@ const handleSearch = () => {
   if (searchForm.model) {
     filteredData = filteredData.filter(row => row['产品型号'] === searchForm.model)
   }
-  
-  if (searchForm.dateRange && searchForm.dateRange.length === 2) {
+    if (searchForm.dateRange && searchForm.dateRange.length === 2) {
     const startDate = new Date(searchForm.dateRange[0])
     const endDate = new Date(searchForm.dateRange[1])
     filteredData = filteredData.filter(row => {
-      const commentDate = new Date(row['评论时间'])
-      return commentDate >= startDate && commentDate <= endDate
+      // 将Excel日期序列号转换为JavaScript日期对象
+      const excelDate = new Date((row['评论时间'] - 25569) * 86400 * 1000)
+      excelDate.setHours(0, 0, 0, 0) // 设置时间为当天的开始
+      
+      // 确保开始和结束日期的时间部分也被重置
+      const start = new Date(startDate)
+      start.setHours(0, 0, 0, 0)
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
+      
+      return excelDate >= start && excelDate <= end
     })
   }
   
