@@ -87,7 +87,7 @@
         </div>
         
         <div class="results-container" v-if="batchResults.length">
-          <el-table :data="batchResults" style="width: 100%" border height="400">
+          <el-table :data="batchResults" style="width: 100%" border>
             <el-table-column prop="comment" label="评论内容" min-width="200" show-overflow-tooltip />
             <el-table-column prop="sentiment" label="情感倾向" width="100">
               <template #default="scope">
@@ -614,25 +614,40 @@ const getConfidenceColor = (confidence) => {
 .results-container {
   border-radius: 4px;
   background: #fff;
-}
-
-:deep(.el-table) {
-  max-height: 400px;
+  overflow-x: auto;
+  max-height: 60vh;
   overflow-y: auto;
 }
 
-:deep(.el-upload-list) {
-  margin: 0.5rem 0;
-  max-width: 300px;
+:deep(.el-table) {
+  min-width: 600px;
+}
+
+@media (max-width: 1200px) {
+  .results-container {
+    overflow-x: auto;
+    max-width: 100vw;
+  }
+  :deep(.el-table) {
+    max-height: unset;
+    min-width: 600px;
+  }
 }
 
 @media (max-width: 768px) {
   .sentiment-analysis-usage {
     padding: 10px;
   }
-  
   :deep(.el-descriptions-item) {
     padding: 0.5rem;
+  }
+  .results-container {
+    overflow-x: auto;
+    max-width: 100vw;
+  }
+  :deep(.el-table) {
+    max-height: unset;
+    min-width: 600px;
   }
 }
 </style>
