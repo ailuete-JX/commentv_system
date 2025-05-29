@@ -17,7 +17,7 @@ deepseek_file = os.path.join(current_dir, 'public', 'deepseek大模型调用', '
 def get_completion(prompt, temperature=0.7):
     """调用硅基流动API"""
     url = 'https://api.siliconflow.cn/v1/'
-    api_key = 'sk-nvgchpifyvgkzlspzujqrojzfhpjsavcqnnjwjpshomrvfyr'
+    api_key = '' #此处填写你的密钥
 
     client = OpenAI(
         base_url=url,
@@ -45,10 +45,10 @@ def get_optimization_suggestion(comment):
 评论内容："{comment}"
 
 请从以下几个方面提供优化建议：
-1. 产品功能方面
-2. 用户体验方面
-3. 可能的技术改进
-4. 其他建议
+1。 产品功能方面
+2。 用户体验方面
+3。 可能的技术改进
+4。 其他建议
 
 请给出详细但简洁的建议，每个方面不超过2-3点，确保建议具有可操作性。"""
     
@@ -153,9 +153,9 @@ def get_token():
     params = {
         'grant_type': 'client_credentials',
         'client_id': 'McL6b73vcUZII7nXRjkaehEW',
-        'client_secret': '6IzcCffSr5kQXkfJlJQaYTHooRKNRnqT'
+        'client_secret': ''
     }
-    
+    #此处填写你的密钥
     try:
         logger.info("开始获取access token")
         response = http.post(url, params=params, timeout=15)
